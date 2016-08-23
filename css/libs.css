@@ -1,0 +1,674 @@
+ 
+/* Armat style*/
+
+.ongaz
+{
+  stroke: black;
+  fill: #EEEE33;
+}
+
+.onkU800
+{
+  stroke: #3264FF;
+  fill: none;
+}
+
+.onwater
+{
+  stroke: black;
+  fill: #33CC99;
+}
+
+.onkU500
+{
+  stroke: #D50000;
+  fill: none;
+}
+
+.onair
+{
+  stroke: black;
+  fill: #3399FF;
+}
+
+.onkU400
+{
+  stroke: #FF641E;
+  fill: none;
+}
+
+.onstream
+{
+  stroke: black;
+  fill: #FF00FF;
+}
+
+.onkU150
+{
+  stroke: #CD8AFF;
+  fill: none;
+}
+
+.onoil
+{
+  stroke: black;
+  fill: #C63;
+}
+
+.onkU220
+{
+  stroke: #FFD200;
+  fill: none;
+}
+
+.onsmoke
+{
+  stroke: black;
+  fill: #CCC;
+}
+
+.onkU110
+{
+  stroke: #3CA0FF;
+  fill: none;
+}
+
+.onkU6
+{
+  stroke: #109010;
+  fill: none;
+}
+
+.onkU10
+{
+  stroke: #900710;
+  fill: none;
+}
+
+.onkUKbl
+{
+  stroke: #000;
+  fill: none;
+}
+
+.elec_s_on_high
+{
+  stroke: #00FF00;
+  fill: none;
+}
+
+.elec_f_on_high
+{
+  stroke: none;
+  fill: #00FF00;
+  font-size: 11px;
+}
+
+.elec_sf_on_high
+{
+  stroke: #00FF00;
+  fill: #00FF00;
+}
+
+
+.elec_s_off_high
+{
+  stroke: #FF4F00;
+  fill: none;
+}
+
+.elec_f_off_high
+{
+  stroke: none;
+  fill: #FF4F00;
+  font-size: 11px;
+}
+
+.elec_sf_off_high
+{
+  stroke: #FF4F00;
+  fill: #FF4F00;
+}
+
+.elec_s_on
+{
+  stroke: #025510;
+  fill: none;
+}
+
+.elec_f_on
+{
+  stroke: none;
+  fill: #025510;
+  font-size: 11px;
+}
+
+.elec_sf_on
+{
+  stroke: #025510;
+  fill: #025510;
+}
+
+
+.elec_s_off
+{
+  stroke: #5F1209;
+  fill: none;
+}
+
+.elec_f_off
+{
+  stroke: none;
+  fill: #5F1209;
+  font-size: 11px;
+}
+
+.elec_sf_off
+{
+  stroke: #5F1209;
+  fill: #5F1209;
+}
+
+.elec_s_txt
+{
+  stroke: #ddd;
+  fill: none;
+}
+
+.elec_f_txt
+{
+  stroke: none;
+  fill: #ddd;
+  font-size: 11px;
+}
+
+.elec_sf_txt
+{
+  stroke: #ddd;
+  fill: #ddd;
+}
+
+.elec_s_undf
+{
+  stroke: none;
+  fill: none;
+}
+
+.elec_f_undf
+{
+  stroke: none;
+  fill: none;
+}
+
+.elec_sf_undf
+{
+  stroke: none;
+  fill: none;
+}
+
+.elec_s_invalid
+{
+  stroke: white;
+  fill: none;
+}
+
+.elec_f_invalid
+{
+  stroke: none;
+  fill: white;
+}
+
+.elec_sf_invalid
+{
+  stroke: white;
+  fill: white;
+}
+
+.elec_s_shunt
+{
+  stroke: orange;
+  fill: black;
+}
+
+.elec_f_shunt
+{
+  stroke: black;
+  fill: orange;
+}
+
+.elec_sf_shunt
+{
+  stroke: orange;
+  fill: orange;
+}
+
+.elec_s_break
+{
+  stroke: #DF01D7;
+  fill: black;
+}
+
+.elec_f_break
+{
+  stroke: black;
+  fill: #DF01D7;
+}
+
+.elec_sf_break
+{
+  stroke: #DF01D7;
+  fill: #DF01D7;
+}
+
+.elec_s_earth
+{
+  stroke: #000;
+  fill: black;
+}
+
+.elec_f_earth
+{
+  stroke: black;
+  fill: #000;
+}
+
+.elec_sf_earth
+{
+  stroke: #000;
+  fill: #000;
+}
+
+.elec_s_brk
+{
+  stroke: yellow;
+  fill: black;
+}
+
+.elec_f_brk
+{
+  stroke: black;
+  fill: yellow;
+}
+
+.elec_sf_brk
+{
+  stroke: yellow;
+  fill: yellow;
+}
+
+.onevalid
+{
+  stroke: black;
+  fill: #CCC;
+}
+
+.onvapor
+{
+  stroke: black;
+  fill: #d55;
+}
+
+.onkU330
+{
+  stroke: #00AA00;
+  fill: none;
+}
+
+.onkUlow
+{
+  stroke: #5F5F5F;
+  fill: none;
+}
+
+.offkUNone
+{
+  stroke: gray;
+  fill: none;
+}
+
+.offkUunvalid
+{
+  stroke: #666;
+  fill: none;
+}
+
+.on
+{
+  stroke: black;
+  fill: #33CC33;
+  
+}
+
+ .offgaz
+{
+  fill: #383838;
+  stroke: #EEEE33;
+}
+
+ .offkU800
+{
+  fill: #383838;
+  stroke: #3264FF;
+}
+
+.offwater
+{
+  fill: #383838;
+  stroke: #33CC99;
+}
+
+.offkU500
+{
+  fill: #383838;
+  stroke: #0000A8;
+}
+
+.offair
+{
+  fill: #383838;
+  stroke: #3399FF;
+}
+
+.offkU400
+{
+  fill: #383838;
+  stroke: #FF641E;
+}
+
+
+.offstream
+{
+  fill: #383838;
+  stroke: #FF00FF;
+}
+
+.offkU150
+{
+  fill: #383838;
+  stroke: #CD8AFF;
+}
+
+.offoil
+{
+  fill: #383838;
+  stroke: #CC6633;
+}
+
+.offkU220
+{
+  fill: #383838;
+  stroke: #FFD200;
+}
+
+.offsmoke
+{
+  fill: black;
+  stroke: #CCC;
+}
+
+.offkU110
+{
+  fill: black;
+  stroke: #3CA0FF;
+}
+
+.offevalid
+{
+  fill: black;
+  stroke: #CCC;
+}
+
+.offvapor
+{
+  fill: black;
+  stroke: #d55;
+}
+
+.offkU330
+{
+  fill: black;
+  stroke: #00AA00;
+}
+
+.offkUlow
+{
+  fill: black;
+  stroke: #5F5F5F;
+}
+
+.off
+{
+  fill: #383838;
+  stroke: #33CC33;
+}
+
+.notice
+{
+  stroke-width: 0 !important;
+  fill: #FF0 !important;
+
+  
+}
+
+.alarm
+{
+  stroke-width: 0 !important;
+  fill: #EEAD0E !important;
+
+  
+}
+
+.accident
+{
+  stroke-width: 0 !important;
+  fill: red !important;
+  
+}
+
+.notice_stroke
+{
+  stroke: #FF0 !important;
+
+  
+}
+
+.alarm_stroke
+{
+  stroke: #EEAD0E !important;
+
+}
+
+.accident_stroke
+{
+  stroke: #F00 !important;
+}
+
+.local
+{
+  stroke: black;
+  fill: red;
+
+  
+}
+
+.autocontrol
+{
+  stroke: black;
+  fill: #00CD00;
+
+}
+
+.offcheckcontrol
+{
+  fill: #B5B5B5;
+}
+
+.oncheckcontrol
+{
+  fill: #00EE00;
+}
+
+
+.transparent
+{
+  stroke: transparent;
+  fill: transparent;
+
+  
+}
+
+.off
+{
+  stroke: black;
+  fill: gray;
+}
+
+.non
+{
+  stroke: black;
+  fill: white;
+}
+
+
+/* fill style */
+
+
+.nongradh{
+    fill: url(#gradientnone_h)
+}
+
+.nongradv{
+    fill: url(#gradientnone_v)
+}
+
+
+.redgradh{
+    fill: url(#gradientaccident_h)
+}
+
+.redgradv{
+    fill: url(#gradientaccident_v)
+}
+
+
+.gazgradh{
+    fill: url(#gradientgaz_h)
+}
+
+.gazgradv{
+    fill: url(#gradientgaz_v)
+}
+
+.kU800gradh{
+    fill: url(#gradientkU800_h)
+}
+
+.kU800gradv{
+    fill: url(#gradientkU800_v)
+}
+
+.watergradh{
+    fill: url(#gradientwater_h)
+}
+
+.watergradv{
+    fill: url(#gradientwater_v)
+}
+
+.kU500gradh{
+    fill: url(#gradientkU500_h)
+}
+
+.kU500gradv{
+    fill: url(#gradientkU500_v)
+}
+
+.airgradh{
+    fill: url(#gradientair_h)
+}
+
+.airgradv{
+    fill: url(#gradientair_v)
+}
+
+.kU400gradh{
+    fill: url(#gradientkU400_h)
+}
+
+.kU400gradv{
+    fill: url(#gradientkU400_v)
+}
+
+
+.oilgradh{
+    fill: url(#gradientoil_h)
+}
+
+.oilgradv{
+    fill: url(#gradientoil_v)
+}
+
+.kU220gradh{
+    fill: url(#gradientkU220_h)
+}
+
+.kU220gradv{
+    fill: url(#gradientkU220_v)
+}
+
+.streamgradh{
+    fill: url(#gradientstream_h)
+}
+
+.streamgradv{
+    fill: url(#gradientstream_v)
+}
+
+.kU150gradh{
+    fill: url(#gradientkU150_h)
+}
+
+.kU150gradv{
+    fill: url(#gradientkU150_v)
+}
+
+.central_svgnatext{
+text-anchor: middle; 
+dominant-baseline: central; 
+-webkit-user-select: none;}
+
+.left_svgnatext{
+text-anchor: start; 
+dominant-baseline: central; 
+-webkit-user-select: none;}
+
+.right_svgnatext{
+text-anchor: end; 
+dominant-baseline: central; 
+-webkit-user-select: none;}
+
+*{
+ -webkit-user-select: none;
+}
+
+.elec_bt_text{
+writing-mode: tb; 
+glyph-orientation-vertical: 270;
+}
+
+
+/*line
+{
+    stroke-width: 2px;
+    stroke: black;
+}
+
+text
+{
+    stroke-width: 1px;
+    fill: red;
+    font-size: 11px;
+}*/
+
+
+.elec_selected { opacity: 0.8 !important; outline: 1px solid #E00 !important;}

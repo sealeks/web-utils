@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" 
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            xmlns:elib="http://dvnci/elib" 
+            xmlns:lib="http://dvnci/lib" 
+            targetNamespace="http://dvnci/elib">
+    
+    <!--xsd:import namespace="http://dvnci/lib" schemaLocation="file:///F:/Project/davinci/guitests/web-utils/lib.xsd"/-->
+        
+    <xsd:simpleType name="direction">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="lr"/>
+            <xsd:enumeration value="rl"/>
+            <xsd:enumeration value="tb"/>
+            <xsd:enumeration value="bt"/>
+            <xsd:enumeration value=""/>
+        </xsd:restriction>
+    </xsd:simpleType>
+        
+    <xsd:simpleType name="alighn">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="left"/>
+            <xsd:enumeration value="center"/>
+            <xsd:enumeration value="right"/>
+            <xsd:enumeration value=""/>
+        </xsd:restriction>
+    </xsd:simpleType>
+        
+    <xsd:simpleType name="gradienttype">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="lr"/>
+            <xsd:enumeration value="tb"/>
+            <xsd:enumeration value="c"/>
+            <xsd:enumeration value=""/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!--
+            kUlow  #5F5F5F
+            kU800  #3264FF
+            kU500  #D50000
+            kU400  #FF641E
+            kU330  #00AA00
+            kU220  #FFD200
+            kU150  #CD8AFF
+            kU110  #3CA0FF
+            kU6       #209020
+            kU10    #EA1020
+            kUKbl   #F8C000            
+    -->
+        
+    <xsd:simpleType name="environment">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="kUlow"/>  
+            <xsd:enumeration value="kU800"/>
+            <xsd:enumeration value="kU500"/>
+            <xsd:enumeration value="kU400"/>
+            <xsd:enumeration value="kU330"/>
+            <xsd:enumeration value="kU220"/>
+            <xsd:enumeration value="kU150"/>
+            <xsd:enumeration value="kU110"/>
+            <xsd:enumeration value="kU6"/>   
+            <xsd:enumeration value="kU10"/>  
+            <xsd:enumeration value="kUKbl"/>                                 
+            <xsd:enumeration value=""/>
+        </xsd:restriction>
+    </xsd:simpleType>
+        
+    <xsd:simpleType name="switchertype">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="station"/>
+            <xsd:enumeration value="stationp"/>            
+            <xsd:enumeration value="breaker"/>
+            <xsd:enumeration value="breakerp"/>            
+            <xsd:enumeration value="break"/>
+            <xsd:enumeration value="breakm"/>   
+            <xsd:enumeration value="breakg"/>                      
+            <xsd:enumeration value="disconnector"/>        
+            <xsd:enumeration value="key"/>               
+            <xsd:enumeration value="side"/>
+            <xsd:enumeration value="fside"/>        
+            <xsd:enumeration value="lside"/>        
+            <xsd:enumeration value="generator"/>
+            <xsd:enumeration value="grounding"/>        
+            <xsd:enumeration value="arrester"/>        
+            <xsd:enumeration value="coil"/>
+            <xsd:enumeration value="compensator"/>
+            <xsd:enumeration value="condenser"/>
+            <xsd:enumeration value="ctransformator"/>
+            <xsd:enumeration value="fuse"/>        
+            <xsd:enumeration value="kvpu"/>
+            <xsd:enumeration value="reactor"/>    
+            <xsd:enumeration value="suppressor"/>   
+            <xsd:enumeration value="synccondenser"/>        
+            <xsd:enumeration value="transformator1"/>   
+            <xsd:enumeration value="transformator2"/>         
+            <xsd:enumeration value="transformator3"/>   
+            <xsd:enumeration value="transformator4"/>                             
+            <xsd:enumeration value=""/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="normalstate">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="none"/>
+            <xsd:enumeration value="on"/>
+            <xsd:enumeration value="off"/>
+            <xsd:enumeration value=""/>
+        </xsd:restriction>
+    </xsd:simpleType>    
+
+        
+    <xsd:simpleType name="filtertype">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="filter1"/>
+            <xsd:enumeration value="filter2"/>
+            <xsd:enumeration value="filter3"/>
+            <xsd:enumeration value=""/>
+        </xsd:restriction>
+    </xsd:simpleType>
+        
+        
+    <xsd:simpleType name="armatfiltertype">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="filter"/>
+            <xsd:enumeration value=""/>
+        </xsd:restriction>
+    </xsd:simpleType>
+        
+        
+    <xsd:element name="switcher">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <lib:creator name="elib:switcher" hint="switcher">
+                    <elib:switcher x="" y="" height="50" width="50"/>
+                </lib:creator>
+            </xsd:appinfo>
+        </xsd:annotation>        
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:ID" use="required"/>
+            <xsd:attribute name="type" type="elib:switchertype"/>
+            <xsd:attribute name="initstate" type="elib:normalstate"/>            
+            <xsd:attribute name="x" type="xsd:string" default="0"/>
+            <xsd:attribute name="y" type="xsd:string" default="0"/>
+            <xsd:attribute name="width" type="xsd:string" default="100"/>
+            <xsd:attribute name="height" type="xsd:string" default="100"/>
+            <xsd:attribute name="header" type="xsd:string"/>
+            <xsd:attribute name="environment" type="elib:environment"/>
+            <xsd:attribute name="state" type="lib:expression"/>
+            <xsd:attribute name="pos" type="lib:tag"/>
+            <!--xsd:attribute name="earth" type="lib:tag"/>
+            <xsd:attribute name="shunt" type="lib:tag"/-->
+            <xsd:attribute name="visible" type="lib:expression"/>
+            <xsd:attribute name="rotate" type="xsd:string"/>
+            <xsd:attribute name="debugfunc" type="xsd:string"/>
+            <xsd:attribute name="filter" type="elib:armatfiltertype"/>
+            <xsd:attribute name="captionstyle" type="xsd:string"/>            
+        </xsd:complexType>
+    </xsd:element>
+        
+        
+    <xsd:element name="epath">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <lib:creator name="elib:epath" hint="epath">
+                    <elib:epath stroke-width="5" d=" M0,0 l 100,100" stroke="#bbb"/>
+                </lib:creator>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:ID" use="required"/>
+            <xsd:attribute name="d" type="xsd:string"/>
+            <xsd:attribute name="state" type="lib:expression"/>
+            <xsd:attribute name="environment" type="elib:environment"/>        
+            <xsd:attribute name="stroke" type="xsd:string"/>
+            <xsd:attribute name="stroke-width" type="xsd:string"/>
+            <xsd:attribute name="visible" type="lib:expression"/>
+            <xsd:attribute name="filter" type="elib:filtertype"/>
+        </xsd:complexType>
+    </xsd:element>    
+        
+        
+    <xsd:element name="eline">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <lib:creator name="elib:eline" hint="eline">
+                    <elib:eline stroke-width="2"  x1="0" y1="0" x2="100" y2="100" stroke="#bbb"  transform=""/>
+                </lib:creator>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:attribute name="id" type="xsd:ID" use="required"/>
+            <xsd:attribute name="x1" type="xsd:string" default="0"/>
+            <xsd:attribute name="y1" type="xsd:string" default="0"/>
+            <xsd:attribute name="x2" type="xsd:string" default="0"/>
+            <xsd:attribute name="y2" type="xsd:string" default="0"/>
+            <xsd:attribute name="state" type="lib:expression"/>
+            <xsd:attribute name="environment" type="elib:environment"/>        
+            <xsd:attribute name="stroke" type="xsd:string"/>
+            <xsd:attribute name="stroke-width" type="xsd:string"/>
+            <xsd:attribute name="visible" type="lib:expression"/>
+            <xsd:attribute name="filter" type="elib:filtertype"/>
+            
+            <xsd:attribute name="transform" type="xsd:string" default=""/>                        
+        </xsd:complexType>
+    </xsd:element>    
+    
+                    
+    <xsd:element name="group">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <lib:creator name="elib:group" hint="group">
+                    <elib:group x="" y="" height="400" width="400"/>
+                </lib:creator>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:ID" use="required"/>
+            <xsd:attribute name="x" type="xsd:string" default="0"/>
+            <xsd:attribute name="y" type="xsd:string" default="0"/>
+            <xsd:attribute name="width" type="xsd:string" default="100"/>
+            <xsd:attribute name="height" type="xsd:string" default="100"/>
+            <xsd:attribute name="translate-x" type="xsd:string"/>
+            <xsd:attribute name="translate-y" type="xsd:string"/>
+            <xsd:attribute name="rotate-angle" type="xsd:string"/>
+            <xsd:attribute name="rotate-angle-binding" type="lib:expression"/>
+            <xsd:attribute name="scale" type="xsd:string"/>
+            <xsd:attribute name="scale-binding" type="lib:expression"/>
+            <xsd:attribute name="visible-binding" type="lib:expression"/>
+            <xsd:attribute name="onclick" type="lib:event"/>
+            <xsd:attribute name="ondblclick" type="lib:event"/>
+            <xsd:attribute name="onmouseup" type="lib:event"/>
+            <xsd:attribute name="onmousedown" type="lib:event"/>
+            <xsd:attribute name="onmousemove" type="lib:event"/>
+            <xsd:attribute name="onmouseout" type="lib:event"/>
+            <xsd:attribute name="onmouseover" type="lib:event"/>
+            <xsd:attribute name="onmousewheel" type="lib:event"/>
+        </xsd:complexType>
+    </xsd:element>
+
+
+</xsd:schema>
