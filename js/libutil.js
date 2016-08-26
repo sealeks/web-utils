@@ -2498,7 +2498,7 @@ libutil.dom.findChildByTagName = function (el, name){
     return null;
 }
 
-libutil.dom.removeCild = function (parent, el){
+libutil.dom.removechild = function (parent, el){
     for(var e=parent.firstElementChild; e; e=e.nextElementSibling){
         if (e==el) {
             parent.removeChild(el);
@@ -2570,7 +2570,7 @@ libutil.proggress.throbber.RELATIVE_SIZE = 0.3;
 
 libutil.proggress.throbber.prototype.destroy = function(){
     if (this.parent && this.trob)
-        libutil.dom.removeCild(this.parent, this.trob);//this.parent.removeChild(this.trob);
+        libutil.dom.removechild(this.parent, this.trob);//this.parent.removeChild(this.trob);
 }
 
 

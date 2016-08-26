@@ -2926,7 +2926,7 @@ dsutl.menue.prototype.check = function(){
 }
 
 dsutl.menue.prototype.hide = function(){
-    libutil.dom.removeCild(this.documentElement, this.body);
+    libutil.dom.removechild(this.documentElement, this.body);
 }
 
 dsutl.menue.prototype.getBody = function(){
