@@ -2356,6 +2356,8 @@ libutil.trendchart.prototype.execute = function(ev) {
                 
                 this.element.chart = this.chart;
                 this.addBound();
+                for (var k in this.chart.series)
+                    this.chart.series[k].show()
                 if (this.complete)
                     this.complete();
             }
