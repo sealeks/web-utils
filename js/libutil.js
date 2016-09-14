@@ -1864,8 +1864,8 @@ libutil.trendchart = function(option){
                     this.serias_lastvalue[i]=null;
                 }
         
-                this.handler = function(){
-                    ts.execute(event);
+                this.handler = function(ev){
+                    ts.execute(ev ? ev : event);
                 }
         
                 if (!sqlreq)

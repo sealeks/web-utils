@@ -246,8 +246,10 @@ dbutil.database.setRight = function(self, min){
 }
 
 dbutil.database.setNow = function(self, per){
+    var nowDt =new Date();
+    //nowDt = nowDt - 24 * 3600000 * 86
     var period = per ? per : (self.stop.valueOf()-self.start.valueOf());
-    self.start=new Date((new Date()).valueOf() - period);
+    self.start=new Date(nowDt.valueOf() - period);
     self.stop=new Date(self.start.valueOf() + period);         
     self.normalizePeriod();
     //self.run();
@@ -366,8 +368,9 @@ dbutil.trend_controller.prototype.connect = function(noinit){
         this.setStop(new Date());        
         this.updatedate();       
         window.$$connectSCDB( 
-            function(){
-                var evnt= event;
+            function(evnt){
+                if (!evnt)
+                    evnt= event;
                 setTimeout( function(){
                     ts.attach(evnt);
                 },0)
@@ -718,37 +721,37 @@ dbutil.trend_controller.prototype.init = function(){
         {
             name:'color',
             index:'color',
-            width: 1
+            width: 0
 
         },  
         {
             name:'auto',
             index:'auto',
-            width: 1
+            width: 0
 
         },  
         {
             name:'min',
             index:'min',
-            width: 1
+            width: 0
 
         },          
         {
             name:'max',
             index:'max',
-            width: 1
+            width: 0
 
         },  	
         {
             name:'mineu',
             index:'mineu',
-            width: 1            
+            width: 0
         },
         
         {
             name:'maxeu',
             index:'maxeu',
-            width: 1            
+            width: 0
         }	
         ],
    	
