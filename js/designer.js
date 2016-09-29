@@ -30,7 +30,7 @@ function designer(doc){
     
     this.instantdocument=doc;
     this.schema=new dsutl.componentinfo();
-    this.schema.init('../web-utils/lib.xsl');
+    this.schema.init('../config/config.xsl');
     this.getSourseDocument();
     this.getLightDocument();
     this.instantdocument.addEventListener('keyup' ,function (ev) {
