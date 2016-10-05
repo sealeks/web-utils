@@ -199,7 +199,7 @@ remoteutil.loader.attach = function (doc) {
                     try {
                         if (event && event.data == 'init' && !doc.intfIO.remoteEvent) {
                             doc.intfIO.remoteEvent = event;
-                            console.log('Window by attach', doc.intfIO.remoteEvent);
+                            //console.log('Window by attach', doc.intfIO.remoteEvent);
                         } else{
                             console.log('Window not  attach', event);
                         }                           
@@ -2197,8 +2197,13 @@ remoteutil.interfaceIO.prototype.proccessRslt = function (name, ev) {
         {
             if (!ev.error) {
                 var nev={ list: []};
-                for (var key in ev) 
-                    nev.list.push(ev[key]);
+                for (var key in ev){
+                    if (nev.type==undefined)
+                        nev.type=ev[key].type & 0xFFFF;                    
+                    if ((ev[key].type & 0xFFFF) == 0x600)
+                        ev[key].type = ev[key].type >> 16;
+                    nev.list.push(ev[key]);}
+                
                 ev=nev;
                 return nev;
             }
