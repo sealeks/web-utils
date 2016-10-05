@@ -55,42 +55,56 @@ libutil.test = {};
 
 
 
-function formopen(name){
-    if ((!window.$$editable) || ($$editable())) return;
-    var fl =  libutil.global.getFormList();
-    if (fl){   
-        for (var i=0; i<fl.length;++i){
-            if (fl[i]['name']==name){
-                if (!fl[i].window){
-                    var win=window.open(fl[i]['path'],fl[i]['name'],fl[i]['param'].toString());
-                    // win.document.domain=document.domain;
-                    fl[i].window=win;
+function formopen(name) {
+    if (window.$$global) {
+        if ((!window.$$editable) || ($$editable()))
+            return;
+        var fl = libutil.global.getFormList();
+        if (fl) {
+            for (var i = 0; i < fl.length; ++i) {
+                if (fl[i]['name'] == name) {
+                    if (!fl[i].window) {
+                        var win = window.open(fl[i]['path'], fl[i]['name'], fl[i]['param'].toString());
+                        // win.document.domain=document.domain;
+                        fl[i].window = win;
+                    }
+                    else {
+                        fl[i].window.focus();
+                    }
+                    return;
                 }
-                else{
-                    fl[i].window.focus();  
-                }
-                return;
             }
         }
+    }
+    else {
+        if (formopen)
+            formopen(name);
     }
 }
 
 
 
-function formclose(name){
-    if ((!window.$$editable) || ($$editable())) return;
-    var fl =  libutil.global.getFormList();
-    if (fl){  
-        for (var i=0; i<fl.length;++i){
-            if (fl[i]['name']==name){
-                if (fl[i].window){
-                    fl[i].window.onunload=null;
-                    fl[i].window.close();
+function formclose(name) {
+    if (window.$$global) {
+        if ((!window.$$editable) || ($$editable()))
+            return;
+        var fl = libutil.global.getFormList();
+        if (fl) {
+            for (var i = 0; i < fl.length; ++i) {
+                if (fl[i]['name'] == name) {
+                    if (fl[i].window) {
+                        fl[i].window.onunload = null;
+                        fl[i].window.close();
+                    }
+                    fl[i].window = null;
+                    return;
                 }
-                fl[i].window=null;
-                return;
             }
         }
+    }
+    else {
+        if (formclose)
+            formclose(name);
     }
 }
 
@@ -136,7 +150,7 @@ function formclose_allwin(){
         }
     }
     catch(err){
-        alert(err);
+        //alert(err);
     }
 }
 
@@ -150,11 +164,12 @@ function exit(){
             $$exit();
         }
         win.$$global().___mainwindow.close();
-        win.$$global().___mainwindow=undefined;
+        win.$$global().___mainwindow = undefined;
     }
-    else{
-        $$exit();
-        window.close();
+    else {
+        if ($$exit)
+            $$exit();
+        //window.close();
     }
 }
 

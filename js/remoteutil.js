@@ -138,6 +138,42 @@ removeTrendsListener = function (handler) {
 if (!window.removeTrendsListener)
     window.removeTrendsListener=removeTrendsListener;
 
+
+
+$$exit = function () {
+    var intf = getIntfIO();
+    if (intf) {
+        return intf.$$exit();
+    }
+}
+
+if (!window.$$exit)
+    window.$$exit=$$exit;
+
+
+
+formopen= function (name) {
+    var intf = getIntfIO();
+    if (intf) {
+        return intf.formopen(name);
+    }
+}
+
+if (!window.formopen)
+    window.formopen=formopen;
+
+
+
+formclose= function (name) {
+    var intf = getIntfIO();
+    if (intf) {
+        return intf.formclose(name);
+    }
+}
+
+if (!window.formclose)
+    window.formclose=formclose;
+
 // loader
 
 remoteutil.loader = {};
@@ -148,7 +184,20 @@ remoteutil.loader.attach = function (doc) {
             remoteutil.setTrobler(true);
             remoteutil.loader.treat(doc.documentElement);
             doc.intfIO = new remoteutil.interfaceIO(doc.documentElement);
-            remoteutil.loader.finder(doc.documentElement, doc.intfIO);            
+            remoteutil.loader.finder(doc.documentElement, doc.intfIO);
+
+            if (window)
+                window.addEventListener('message', function () {
+                    try {
+                        if (event && event.data == 'init' && !doc.intfIO.remoteEvent) {
+                            doc.intfIO.remoteEvent = event;
+                            console.log('Window by attach', doc.intfIO.remoteEvent);
+                        } else{
+                            console.log('Window not  attach', event);
+                        }                           
+                    } catch (error) {
+                    }
+                } , false);
         }
 
         if (doc.intfIO) {
@@ -1717,6 +1766,27 @@ remoteutil.interfaceIO.prototype.addExecute = function (expr, handler) {
         trs.handler = handler;
     this.addTransact('executeexpressions', trs);
     return handler;
+}
+
+remoteutil.interfaceIO.prototype.$$exit = function () {
+    if (this.remoteEvent) {
+        this.remoteEvent.source.postMessage("$$exit", "*");
+        //console.log("$$exit to -> ", this.remoteEvent.source)
+    }
+}
+
+remoteutil.interfaceIO.prototype.formopen = function (name) {
+    if (this.remoteEvent) {
+        this.remoteEvent.source.postMessage("formopen:" + name, "*");
+        //console.log("$$exit to -> ", this.remoteEvent.source)
+    }
+}
+
+remoteutil.interfaceIO.prototype.formclose = function (name) {
+    if (this.remoteEvent) {
+        this.remoteEvent.source.postMessage("formclose:" + name, "*");
+        //console.log("$$exit to -> ", this.remoteEvent.source)
+    }
 }
 
 remoteutil.interfaceIO.prototype.registrateUser = function (handler, user, password) {
