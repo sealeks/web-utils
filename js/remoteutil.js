@@ -75,6 +75,14 @@ $$error = function (expr, handler) {
     }
 }
 
+//$$users = function (handler)
+$$users = function (handler) {
+    var intf = getIntfIO();
+    if (intf) {
+        return intf.$$users(handler);
+    }
+}
+
 $$registuser = function (handler, user, password) {
     var intf = getIntfIO();
     if (intf) {
@@ -1778,15 +1786,18 @@ remoteutil.interfaceIO.prototype.$$exit = function () {
 remoteutil.interfaceIO.prototype.formopen = function (name) {
     if (this.remoteEvent) {
         this.remoteEvent.source.postMessage("formopen:" + name, "*");
-        //console.log("$$exit to -> ", this.remoteEvent.source)
     }
 }
 
 remoteutil.interfaceIO.prototype.formclose = function (name) {
     if (this.remoteEvent) {
         this.remoteEvent.source.postMessage("formclose:" + name, "*");
-        //console.log("$$exit to -> ", this.remoteEvent.source)
     }
+}
+
+remoteutil.interfaceIO.prototype.$$users = function (handler){
+    console.log("entities requst handler");
+    this.addTransact('entities', {type: remoteutil.interfaceIO.NT_USER,   handler: handler });
 }
 
 remoteutil.interfaceIO.prototype.registrateUser = function (handler, user, password) {
@@ -2184,6 +2195,13 @@ remoteutil.interfaceIO.prototype.proccessRslt = function (name, ev) {
         }
         case 'entities':
         {
+            if (!ev.error) {
+                var nev={ list: []};
+                for (var key in ev) 
+                    nev.list.push(ev[key]);
+                ev=nev;
+                return nev;
+            }
             return ev;
             break;
         }
