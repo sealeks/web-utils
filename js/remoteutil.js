@@ -199,9 +199,10 @@ remoteutil.loader.attach = function (doc) {
                     try {
                         if (event && event.data == 'init' && !doc.intfIO.remoteEvent) {
                             doc.intfIO.remoteEvent = event;
-                            //console.log('Window by attach', doc.intfIO.remoteEvent);
                         } else{
-                            console.log('Window not  attach', event);
+                            if (doc.intfIO && event){
+                                doc.intfIO.appmessageController(event);
+                            }
                         }                           
                     } catch (error) {
                     }
@@ -1796,16 +1797,25 @@ remoteutil.interfaceIO.prototype.formclose = function (name) {
 }
 
 remoteutil.interfaceIO.prototype.$$users = function (handler){
-    console.log("entities requst handler");
     this.addTransact('entities', {type: remoteutil.interfaceIO.NT_USER,   handler: handler });
 }
 
 remoteutil.interfaceIO.prototype.registrateUser = function (handler, user, password) {
     this.addTransact('registrate', {user: user, password: password, handler: handler});
+    this.sendAppMessage('registrate', { user : user, password: password});   
 }
 
 remoteutil.interfaceIO.prototype.unregistrateUser = function (handler) {
     this.addTransact('unregistrate', {handler: handler});
+    this.sendAppMessage('unregistrate', {});
+}
+
+remoteutil.interfaceIO.prototype.sendAppMessage = function (type, message) {
+    if (this.remoteEvent) {
+        if (window && window.document)
+            message.excludeURI = window.document.baseURI;
+        this.remoteEvent.source.postMessage( type+ ":" +
+                JSON.stringify(message), '*');}    
 }
 
 remoteutil.interfaceIO.prototype.addUser = function (handler, user, password, access) {
@@ -1822,6 +1832,59 @@ remoteutil.interfaceIO.prototype.changePassword = function (handler, user, oldpa
 
 remoteutil.interfaceIO.prototype.changeAccess = function (handler, user, access) {
     this.addTransact('changeaccess', {user: user, access: access, handler: handler});
+}
+
+remoteutil.interfaceIO.prototype.buildArg = function (msg) {
+    var it = msg.toString().indexOf(':');
+    if (it >= 0 && (it + 1) < msg.length)
+        return {id: msg.substring(0, it), arg: msg.substring(it + 1)};
+    return {id: msg};
+}
+
+remoteutil.interfaceIO.prototype.appmessageController = function (event) {
+    if (this.remoteEvent && event && event.data) {
+        var message = this.buildArg(event.data);
+        var body = message.arg;
+        var bodyob;
+        try {
+            bodyob = JSON.parse(body);
+        }
+        catch (exception) {
+            bodyob = {};
+        }
+        if (!bodyob.excludeURI ||
+                (bodyob.excludeURI != window.document.baseURI)) {
+            if (bodyob.excludeURI)
+                delete bodyob.excludeURI;
+            switch (message.id) {
+                case 'registrate':
+                {
+                    //console.log('registreate in appmessageController', body);
+                    this.addTransact('registrate', {user: bodyob.user,
+                        password: bodyob.password,
+                        handler: function () {
+                            console.log('registreate handler', event);
+                        }});
+                    break;
+                }
+                case 'unregistrate':
+                {
+                    //console.log('unregistreate in appmessageController', body);
+                    this.addTransact('unregistrate', {
+                        handler: function () {
+                            console.log('unregistreate handler', event);
+                        }});
+                    break
+                }
+                default:
+                {
+                    console.log('no parsed event', message);
+                }
+            }
+        }
+    }
+    else
+        console.log('null event', message);
 }
 
 remoteutil.interfaceIO.prototype.enitiesInfo = function (handler, type, indx, filter) {
