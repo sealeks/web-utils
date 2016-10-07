@@ -1960,7 +1960,7 @@ remoteutil.interfaceIO.prototype.send = function (data, callback, url, meth) {
     if ($ && $.ajax) {
         $.ajax({
             type: meth ? meth : "POST",
-            url: url ? url : "../data/livedata.json",
+            url: url ? url : "../data",
             data: JSON.stringify(data),
             success: callback,
             error: this.parse_error,
