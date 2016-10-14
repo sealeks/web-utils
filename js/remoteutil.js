@@ -30,7 +30,30 @@
  addAlarmsListener(handler[, agroup, group])
  removeAlarmsListener(handler)
  addTrendsListener(handler, taglist, period)
- removTrendsListener(handler)*/
+ removTrendsListener(handler)
+ 
+ 
+ 
+ 
+ //  DATABASE connection
+ * 
+ // без привязки к trendef
+ $$connestDB( handler, provider, connectstring, timeout)
+ 
+ $$connectSCDB( handler, provider, connectstring, timeout)
+ 
+ in this handler error or DBObject
+ 
+ DBObject interface
+ 
+ func:
+    select_trenddef(handler)
+    select_trends(handler, tagnames, starttime, stoptime)
+    select_reports(handler, tagnames, starttime, stoptime)
+    select_journal(handler,  starttime, stoptime, filter)
+    select_debug(handler, starttime, stoptime, filter)
+    select(handler, sqlstr)
+ **/
 
 var remoteutil = {};
 
@@ -2314,6 +2337,12 @@ remoteutil.interfaceIO.prototype.proccessRslt = function (name, ev) {
 }
 
 
+
+
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+
 remoteutil.setTrobler = function (state) {
     var docelem = document.documentElement;
     if (docelem) {
@@ -2392,5 +2421,134 @@ remoteutil.setTrobler = function (state) {
             trob.setAttributeNS(libutil.XLINK_NAMESPACE_URL, 'xlink:href', '../web-utils/css/res/throbber.svg');            
         }
         docelem.trobler.setAttribute('display' , state ? 'inhiret' : 'none');
+    }
+}
+
+
+
+
+
+
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+
+
+$$connectSCDB = function (handler, provider, constring) {
+    $$send__db({init: ""}, function ()
+    {
+        if (event && event.target &&
+                event.target.response) {
+            var evnt = JSON.parse(event.target.response);
+            evnt.connection = window.connection;
+        }
+        else
+            var evnt = {
+                error: 1
+            }
+        event = evnt;
+        handler(event);
+    },
+            "../dbase");
+}
+
+connection = {
+    parse_event: function (event, error) {
+        if (event && event.target &&
+                event.target.response)
+            return JSON.parse(event.target.response);
+        return  {error: error ? error : 1}
+    },
+    select_trenddef: function (handler) {
+        $$send__db({
+            trenddef: ""
+        },
+        function () {
+            var evnt = connection.parse_event(event);
+            event = evnt;
+            handler(evnt);
+        },
+                "../dbase");
+        return true;
+    },
+    select_trends: function (handler, tagnames, starttime, stoptime) {
+        $$send__db({
+            tags: tagnames,
+            start: Date.parse(starttime),
+            stop: Date.parse(stoptime)
+        },
+        function () {
+            var evnt = connection.parse_event(event);
+            parseTrendsEvent(evnt);
+            event = evnt;
+            handler(evnt);
+        },
+                "../dbase");
+        return true;
+    },
+    select_journal:  function (handler,  starttime, stoptime, filter){
+        $$send__db({
+            journal: '',
+            start: Date.parse(starttime),
+            stop: Date.parse(stoptime),
+            filter: filter ? filter : ''
+        },
+        function () {
+            var evnt = connection.parse_event(event);
+            parseJournalEvent(evnt);
+            event = evnt;
+            handler(evnt);
+        },
+                "../dbase");
+        return true;
+    }
+    //  select_debug(handler, starttime, stoptime, filter)
+    //  select(handler, sqlstr)   
+}
+
+if (!window.connection){
+    window.connection=connectiion;
+}
+
+
+
+$$send__db = function (data, callback, url, meth) {
+    if ($ && $.ajax) {
+        $.ajax({
+            type: meth ? meth : "POST",
+            url: url ? url : "../",
+            data: JSON.stringify(data),
+            success: callback,
+            error: this.parse_error,
+            self: this
+        });
+    }
+}
+
+parseTrendsEvent = function(ev) {
+    if (ev && ev.length){
+            for (var id in ev) {
+                if ((ev[id].data) && (ev[id].data.length)){
+                    for (var indx in ev[id].data) {
+                        if (ev[id].data[indx].length)
+                            ev[id].data[indx][0]=new Date(ev[id].data[indx][0]);
+                        if (ev[id].data[indx].length>1){
+                            ev[id].data[indx][1] = parseFloat(ev[id].data[indx][1]);
+                            if (ev[id].data[indx][1]!=ev[id].data[indx][1])
+                                ev[id].data[indx][1]=null;
+                        }
+                        else
+                            ev[id].data[indx].push(null);
+                    }
+                }
+            }
+    }
+}
+
+parseJournalEvent = function (ev) {
+    if (ev && ev.table) {
+        for (var id in ev.table) {
+            ev.table[id].time = new Date(ev.table[id].time);
+        }
     }
 }
