@@ -1630,7 +1630,7 @@ dbutil.journal_controller.prototype.dataresponse = function(ev){
 }
 
 dbutil.journal_controller.prototype.filterRslt = function( val ){
-  if (this.checked==dbutil.journal_controller.MSG_FULL)
+  if ((this.checked==dbutil.journal_controller.MSG_FULL) || !this.checked)
     return true;
   for (var i=0;i<dbutil.journal_controller.MESSAGE_TYPE.length;++i)
       if (this.checked & (1 << (i)) && (
