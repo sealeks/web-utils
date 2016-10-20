@@ -30,7 +30,30 @@
  addAlarmsListener(handler[, agroup, group])
  removeAlarmsListener(handler)
  addTrendsListener(handler, taglist, period)
- removTrendsListener(handler)*/
+ removTrendsListener(handler)
+ 
+ 
+ 
+ 
+ //  DATABASE connection
+ * 
+ // без привязки к trendef
+ $$connestDB( handler, provider, connectstring, timeout)
+ 
+ $$connectSCDB( handler, provider, connectstring, timeout)
+ 
+ in this handler error or DBObject
+ 
+ DBObject interface
+ 
+ func:
+    select_trenddef(handler)
+    select_trends(handler, tagnames, starttime, stoptime)
+    select_reports(handler, tagnames, starttime, stoptime)
+    select_journal(handler,  starttime, stoptime, filter)
+    select_debug(handler, starttime, stoptime, filter)
+    select(handler, sqlstr)
+ **/
 
 var remoteutil = {};
 
@@ -72,6 +95,14 @@ $$error = function (expr, handler) {
     if (intf) {
         //console.log('global $$error expr=', expr);
         return intf.addExpressionListener(expr, handler, true);
+    }
+}
+
+//$$users = function (handler)
+$$users = function (handler) {
+    var intf = getIntfIO();
+    if (intf) {
+        return intf.$$users(handler);
     }
 }
 
@@ -138,6 +169,42 @@ removeTrendsListener = function (handler) {
 if (!window.removeTrendsListener)
     window.removeTrendsListener=removeTrendsListener;
 
+
+
+$$exit = function () {
+    var intf = getIntfIO();
+    if (intf) {
+        return intf.$$exit();
+    }
+}
+
+if (!window.$$exit)
+    window.$$exit=$$exit;
+
+
+
+formopen= function (name) {
+    var intf = getIntfIO();
+    if (intf) {
+        return intf.formopen(name);
+    }
+}
+
+if (!window.formopen)
+    window.formopen=formopen;
+
+
+
+formclose= function (name) {
+    var intf = getIntfIO();
+    if (intf) {
+        return intf.formclose(name);
+    }
+}
+
+if (!window.formclose)
+    window.formclose=formclose;
+
 // loader
 
 remoteutil.loader = {};
@@ -148,7 +215,21 @@ remoteutil.loader.attach = function (doc) {
             remoteutil.setTrobler(true);
             remoteutil.loader.treat(doc.documentElement);
             doc.intfIO = new remoteutil.interfaceIO(doc.documentElement);
-            remoteutil.loader.finder(doc.documentElement, doc.intfIO);            
+            remoteutil.loader.finder(doc.documentElement, doc.intfIO);
+
+            if (window)
+                window.addEventListener('message', function () {
+                    try {
+                        if (event && event.data == 'init' && !doc.intfIO.remoteEvent) {
+                            doc.intfIO.remoteEvent = event;
+                        } else{
+                            if (doc.intfIO && event){
+                                doc.intfIO.appmessageController(event);
+                            }
+                        }                           
+                    } catch (error) {
+                    }
+                } , false);
         }
 
         if (doc.intfIO) {
@@ -1719,12 +1800,45 @@ remoteutil.interfaceIO.prototype.addExecute = function (expr, handler) {
     return handler;
 }
 
+remoteutil.interfaceIO.prototype.$$exit = function () {
+    if (this.remoteEvent) {
+        this.remoteEvent.source.postMessage("$$exit", "*");
+        //console.log("$$exit to -> ", this.remoteEvent.source)
+    }
+}
+
+remoteutil.interfaceIO.prototype.formopen = function (name) {
+    if (this.remoteEvent) {
+        this.remoteEvent.source.postMessage("formopen:" + name, "*");
+    }
+}
+
+remoteutil.interfaceIO.prototype.formclose = function (name) {
+    if (this.remoteEvent) {
+        this.remoteEvent.source.postMessage("formclose:" + name, "*");
+    }
+}
+
+remoteutil.interfaceIO.prototype.$$users = function (handler){
+    this.addTransact('entities', {type: remoteutil.interfaceIO.NT_USER,   handler: handler });
+}
+
 remoteutil.interfaceIO.prototype.registrateUser = function (handler, user, password) {
     this.addTransact('registrate', {user: user, password: password, handler: handler});
+    this.sendAppMessage('registrate', { user : user, password: password});   
 }
 
 remoteutil.interfaceIO.prototype.unregistrateUser = function (handler) {
     this.addTransact('unregistrate', {handler: handler});
+    this.sendAppMessage('unregistrate', {});
+}
+
+remoteutil.interfaceIO.prototype.sendAppMessage = function (type, message) {
+    if (this.remoteEvent) {
+        if (window && window.document)
+            message.excludeURI = window.document.baseURI;
+        this.remoteEvent.source.postMessage( type+ ":" +
+                JSON.stringify(message), '*');}    
 }
 
 remoteutil.interfaceIO.prototype.addUser = function (handler, user, password, access) {
@@ -1741,6 +1855,59 @@ remoteutil.interfaceIO.prototype.changePassword = function (handler, user, oldpa
 
 remoteutil.interfaceIO.prototype.changeAccess = function (handler, user, access) {
     this.addTransact('changeaccess', {user: user, access: access, handler: handler});
+}
+
+remoteutil.interfaceIO.prototype.buildArg = function (msg) {
+    var it = msg.toString().indexOf(':');
+    if (it >= 0 && (it + 1) < msg.length)
+        return {id: msg.substring(0, it), arg: msg.substring(it + 1)};
+    return {id: msg};
+}
+
+remoteutil.interfaceIO.prototype.appmessageController = function (event) {
+    if (this.remoteEvent && event && event.data) {
+        var message = this.buildArg(event.data);
+        var body = message.arg;
+        var bodyob;
+        try {
+            bodyob = JSON.parse(body);
+        }
+        catch (exception) {
+            bodyob = {};
+        }
+        if (!bodyob.excludeURI ||
+                (bodyob.excludeURI != window.document.baseURI)) {
+            if (bodyob.excludeURI)
+                delete bodyob.excludeURI;
+            switch (message.id) {
+                case 'registrate':
+                {
+                    //console.log('registreate in appmessageController', body);
+                    this.addTransact('registrate', {user: bodyob.user,
+                        password: bodyob.password,
+                        handler: function () {
+                            console.log('registreate handler', event);
+                        }});
+                    break;
+                }
+                case 'unregistrate':
+                {
+                    //console.log('unregistreate in appmessageController', body);
+                    this.addTransact('unregistrate', {
+                        handler: function () {
+                            console.log('unregistreate handler', event);
+                        }});
+                    break
+                }
+                default:
+                {
+                    console.log('no parsed event', message);
+                }
+            }
+        }
+    }
+    else
+        console.log('null event', message);
 }
 
 remoteutil.interfaceIO.prototype.enitiesInfo = function (handler, type, indx, filter) {
@@ -1816,7 +1983,7 @@ remoteutil.interfaceIO.prototype.send = function (data, callback, url, meth) {
     if ($ && $.ajax) {
         $.ajax({
             type: meth ? meth : "POST",
-            url: url ? url : "../data/livedata.json",
+            url: url ? url : "../data",
             data: JSON.stringify(data),
             success: callback,
             error: this.parse_error,
@@ -2114,6 +2281,18 @@ remoteutil.interfaceIO.prototype.proccessRslt = function (name, ev) {
         }
         case 'entities':
         {
+            if (!ev.error) {
+                var nev={ list: []};
+                for (var key in ev){
+                    if (nev.type==undefined)
+                        nev.type=ev[key].type & 0xFFFF;                    
+                    if ((ev[key].type & 0xFFFF) == 0x600)
+                        ev[key].type = ev[key].type >> 16;
+                    nev.list.push(ev[key]);}
+                
+                ev=nev;
+                return nev;
+            }
             return ev;
             break;
         }
@@ -2157,6 +2336,12 @@ remoteutil.interfaceIO.prototype.proccessRslt = function (name, ev) {
     return ev;
 }
 
+
+
+
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 
 remoteutil.setTrobler = function (state) {
     var docelem = document.documentElement;
@@ -2236,5 +2421,134 @@ remoteutil.setTrobler = function (state) {
             trob.setAttributeNS(libutil.XLINK_NAMESPACE_URL, 'xlink:href', '../web-utils/css/res/throbber.svg');            
         }
         docelem.trobler.setAttribute('display' , state ? 'inhiret' : 'none');
+    }
+}
+
+
+
+
+
+
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+
+
+$$connectSCDB = function (handler, provider, constring) {
+    $$send__db({init: ""}, function ()
+    {
+        if (event && event.target &&
+                event.target.response) {
+            var evnt = JSON.parse(event.target.response);
+            evnt.connection = window.connection;
+        }
+        else
+            var evnt = {
+                error: 1
+            }
+        event = evnt;
+        handler(event);
+    },
+            "../dbase");
+}
+
+connection = {
+    parse_event: function (event, error) {
+        if (event && event.target &&
+                event.target.response)
+            return JSON.parse(event.target.response);
+        return  {error: error ? error : 1}
+    },
+    select_trenddef: function (handler) {
+        $$send__db({
+            trenddef: ""
+        },
+        function () {
+            var evnt = connection.parse_event(event);
+            event = evnt;
+            handler(evnt);
+        },
+                "../dbase");
+        return true;
+    },
+    select_trends: function (handler, tagnames, starttime, stoptime) {
+        $$send__db({
+            tags: tagnames,
+            start: Date.parse(starttime),
+            stop: Date.parse(stoptime)
+        },
+        function () {
+            var evnt = connection.parse_event(event);
+            parseTrendsEvent(evnt);
+            event = evnt;
+            handler(evnt);
+        },
+                "../dbase");
+        return true;
+    },
+    select_journal:  function (handler,  starttime, stoptime, filter){
+        $$send__db({
+            journal: '',
+            start: Date.parse(starttime),
+            stop: Date.parse(stoptime),
+            filter: filter ? filter : ''
+        },
+        function () {
+            var evnt = connection.parse_event(event);
+            parseJournalEvent(evnt);
+            event = evnt;
+            handler(evnt);
+        },
+                "../dbase");
+        return true;
+    }
+    //  select_debug(handler, starttime, stoptime, filter)
+    //  select(handler, sqlstr)   
+}
+
+if (!window.connection){
+    window.connection=connectiion;
+}
+
+
+
+$$send__db = function (data, callback, url, meth) {
+    if ($ && $.ajax) {
+        $.ajax({
+            type: meth ? meth : "POST",
+            url: url ? url : "../",
+            data: JSON.stringify(data),
+            success: callback,
+            error: this.parse_error,
+            self: this
+        });
+    }
+}
+
+parseTrendsEvent = function(ev) {
+    if (ev && ev.length){
+            for (var id in ev) {
+                if ((ev[id].data) && (ev[id].data.length)){
+                    for (var indx in ev[id].data) {
+                        if (ev[id].data[indx].length)
+                            ev[id].data[indx][0]=new Date(ev[id].data[indx][0]);
+                        if (ev[id].data[indx].length>1){
+                            ev[id].data[indx][1] = parseFloat(ev[id].data[indx][1]);
+                            if (ev[id].data[indx][1]!=ev[id].data[indx][1])
+                                ev[id].data[indx][1]=null;
+                        }
+                        else
+                            ev[id].data[indx].push(null);
+                    }
+                }
+            }
+    }
+}
+
+parseJournalEvent = function (ev) {
+    if (ev && ev.table) {
+        for (var id in ev.table) {
+            ev.table[id].time = new Date(ev.table[id].time);
+        }
     }
 }
