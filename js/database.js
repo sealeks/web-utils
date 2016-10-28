@@ -1620,12 +1620,26 @@ dbutil.journal_controller.prototype.dataresponse = function(ev){
         dbutil.database.reportError(ev, this);
         return;
     }
-    this.journal = ev.table;
+    this.journal=[];
+    for (var i=0;i<ev.table.length;++i){
+        if (this.filterRslt(ev.table[i]))
+            this.journal.push(ev.table[i]);
+    }
+    //this.journal = ev.table;
     dbutil.database.clearmodal();
     this.filltable();
 }
 
-
+dbutil.journal_controller.prototype.filterRslt = function( val ){
+  if ((this.checked==dbutil.journal_controller.MSG_FULL) || !this.checked)
+    return true;
+  for (var i=0;i<dbutil.journal_controller.MESSAGE_TYPE.length;++i)
+      if (this.checked & (1 << (i)) && (
+              dbutil.journal_controller.MESSAGE_TYPE[i].type == val.type) &&
+              (dbutil.journal_controller.MESSAGE_TYPE[i].level == val.level))
+         return true;
+  return false;
+}
 
 dbutil.journal_controller.prototype.filltable = function() {
     $("#table-id").jqGrid('clearGridData');
@@ -1686,12 +1700,13 @@ dbutil.journal_controller.prototype.filter = function(){
   if (this.checked==dbutil.journal_controller.MSG_FULL)
     return undefined;
   var rslt=""
-  for (var i=0;i<dbutil.journal_controller.MESSAGE_TYPE.length;++i){
+  /*for (var i=0;i<dbutil.journal_controller.MESSAGE_TYPE.length;++i){
       if (this.checked & (1 << (i))){
           rslt+= rslt=="" ? " ( " : " or ";
-          rslt+= "( itype=" + dbutil.journal_controller.MESSAGE_TYPE[i].type + " and ilevel=" + dbutil.journal_controller.MESSAGE_TYPE[i].level+ " )";}}
+          rslt+= "( itype=" + dbutil.journal_controller.MESSAGE_TYPE[i].type + 
+                  " and ilevel=" + dbutil.journal_controller.MESSAGE_TYPE[i].level+ " )";}}
   rslt+= rslt=="" ? " " : " )";
-  //console.log('rslt', rslt);    
+  //console.log('rslt', rslt);*/    
   return rslt;
 }
 

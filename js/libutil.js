@@ -662,6 +662,13 @@ libutil.popup.finddirect = function(el, W, H, yd){
         'width': window.innerWidth , 
         'height': window.innerHeight
     };
+    if (window.document && window.document.documentElement &&
+            window.document.documentElement.viewBox &&
+            window.document.documentElement.viewBox.baseVal){
+        windowbound.width=window.document.documentElement.viewBox.baseVal.width;
+        windowbound.height=window.document.documentElement.viewBox.baseVal.height;        
+    }    
+    //console.log('windowbound=', windowbound);
     var popupbound0 =  libutil.popup.getbound(el, W, H, yd,0);
     var popupbound1 =  libutil.popup.getbound(el, W, H, yd,1);
     var popupbound2 =  libutil.popup.getbound(el, W, H, yd,2);
