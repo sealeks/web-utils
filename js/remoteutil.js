@@ -205,6 +205,19 @@ formclose= function (name) {
 if (!window.formclose)
     window.formclose=formclose;
 
+
+
+
+formmessage= function (name, message) {
+    var intf = getIntfIO();
+    if (intf) {
+        return intf.formmessage(name, message);
+    }
+}
+
+if (!window.formmessage)
+    window.formmessage=formmessage;
+
 // loader
 
 remoteutil.loader = {};
@@ -1819,6 +1832,16 @@ remoteutil.interfaceIO.prototype.formclose = function (name) {
     }
 }
 
+remoteutil.interfaceIO.prototype.formmessage = function (name , message) {
+    if (this.remoteEvent) {
+        var msg = {};
+        msg[name] = message;
+        var ms = JSON.stringify( msg );
+        this.remoteEvent.source.postMessage("formmessage:" + ms, "*");
+    }
+}
+
+
 remoteutil.interfaceIO.prototype.$$users = function (handler){
     this.addTransact('entities', {type: remoteutil.interfaceIO.NT_USER,   handler: handler });
 }
@@ -1901,7 +1924,10 @@ remoteutil.interfaceIO.prototype.appmessageController = function (event) {
                 }
                 default:
                 {
-                    console.log('no parsed event', message);
+                    if (window.messagecontroller)
+                        window.messagecontroller(message.id);
+                    else
+                        console.log('no parsed event', message);
                 }
             }
         }

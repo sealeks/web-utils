@@ -1603,7 +1603,8 @@ dbutil.journal_controller.prototype.attach = function(ev){
     this.requested=false;
     this.setstate(); 
     dbutil.database.clearmodal();
-    
+    if (this.onconneced) 
+        this.onconneced();     
 }
 
 
