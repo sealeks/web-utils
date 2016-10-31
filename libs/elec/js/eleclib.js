@@ -500,11 +500,16 @@ eleclib.switcher_popup = function(el, rauto){
         
         document.getElementById(el.getAttribute('id') + '_popup');
            
-           
-        var use = libutil.svg.create_element('use', body);
+        //var use = libutil.svg.create_element('use', body);
+        var use = document.getElementById(el.getAttribute('id') + '_popup');         
         body.useelement=use;
-        use.setAttributeNS(libutil.XLINK_NAMESPACE_URL,'href','#'+el.getAttribute('id') + '_popup');
-
+        //use.setAttributeNS(libutil.XLINK_NAMESPACE_URL,'href','#'+el.getAttribute('id') + '_popup');    
+        //body.appendChild(use/*.cloneNode(true)*/);
+        if ((body.childNodes.length == 0) || 
+                (body.childNodes[body.childNodes.length-1]!=use))
+            body.appendChild(use/*.cloneNode(true)*/);
+        else
+            console.error('duplicate prouse element', use);
     }
     catch(error){
         throw console.error('eleclib.switcher_popup error: ' + error);
@@ -544,11 +549,16 @@ eleclib.config_click = function (el){
         body.setAttribute('id', elementId + '_popup_config_body');
         
                   
-        
-        var use = libutil.svg.create_element('use', body);
+
+        //var use = libutil.svg.create_element('use', body);
+        var use = document.getElementById(elementId + '_popup_config');
         body.useelement=use;
-        use.setAttributeNS("http://www.w3.org/1999/xlink",'href','#' + elementId + '_popup_config');
-        
+        //use.setAttributeNS("http://www.w3.org/1999/xlink",'href','#' + elementId + '_popup_config');
+        if ((body.childNodes.length == 0) || 
+                (body.childNodes[body.childNodes.length-1]!=use))
+            body.appendChild(use/*.cloneNode(true)*/);
+        else
+            console.error('duplicate prouse element', use);
         
         
     }

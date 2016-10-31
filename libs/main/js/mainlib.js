@@ -501,10 +501,15 @@ mainlib.armatura_popup = function(el, rauto){
         document.getElementById(el.getAttribute('id') + '_popup');
            
            
-        var use = libutil.svg.create_element('use', body);
+        //var use = libutil.svg.create_element('use', body);
+        var use = document.getElementById(el.getAttribute('id') + '_popup');
         body.useelement=use;
-        use.setAttributeNS(libutil.XLINK_NAMESPACE_URL,'href','#'+el.getAttribute('id') + '_popup');
-
+        //use.setAttributeNS(libutil.XLINK_NAMESPACE_URL,'href','#'+el.getAttribute('id') + '_popup');
+        if ((body.childNodes.length == 0) || 
+                (body.childNodes[body.childNodes.length-1]!=use))
+            body.appendChild(use/*.cloneNode(true)*/);
+        else
+            console.error('duplicate prouse element', use);
     }
     catch(error){
         throw console.error('mainlib.armatura_popup error: ' + error);
@@ -572,9 +577,16 @@ mainlib.valueset_click =  function (el, nm, width){
         
         var defs = document.getElementById(popupid  + '_popup');
         
-        var use = libutil.svg.create_element('use', body);
+        //var use = libutil.svg.create_element('use', body);
+        var use = document.getElementById(popupid  + '_popup');
         body.useelement=use;
-        use.setAttributeNS("http://www.w3.org/1999/xlink",'href','#'+popupid  + '_popup');
+        //use.setAttributeNS("http://www.w3.org/1999/xlink",'href','#'+popupid  + '_popup');
+        if ((body.childNodes.length == 0) ||
+                (body.childNodes[body.childNodes.length - 1] != use))
+            body.appendChild(use/*.cloneNode(true)*/);
+        else
+            console.error('duplicate prouse element', use);
+        
         okbutton.onclick = function(){
             $$(tag + ' @ ' + text.textContent);
             if (el.popup.trpopup.clearpopup && el.popup.trpopup.clearpopup) el.popup.trpopup.clearpopup();};
@@ -963,9 +975,15 @@ mainlib.regulator_click =  function (el, smp){
         
         var defs = document.getElementById(elementId + '_popup_rootbody');
         
-        var use = libutil.svg.create_element('use', body);
+        //var use = libutil.svg.create_element('use', body);
+        var use = document.getElementById(elementId  + '_popup');
         body.useelement=use;
-        use.setAttributeNS("http://www.w3.org/1999/xlink",'href','#'+elementId + '_popup');
+        //use.setAttributeNS("http://www.w3.org/1999/xlink",'href','#'+elementId + '_popup');
+        if ((body.childNodes.length == 0) ||
+                (body.childNodes[body.childNodes.length - 1] != use))
+            body.appendChild(use/*.cloneNode(true)*/);
+        else
+            console.error('duplicate prouse element', use);        
         
         createchart();
         
@@ -1006,10 +1024,15 @@ mainlib.config_click = function (el){
         
                   
         
-        var use = libutil.svg.create_element('use', body);
+        //var use = libutil.svg.create_element('use', body);
+        var use = document.getElementById(elementId + '_popup_config');        
         body.useelement=use;
-        use.setAttributeNS("http://www.w3.org/1999/xlink",'href','#' + elementId + '_popup_config');
-        
+        //use.setAttributeNS("http://www.w3.org/1999/xlink",'href','#' + elementId + '_popup_config');
+        if ((body.childNodes.length == 0) ||
+                (body.childNodes[body.childNodes.length - 1] != use))
+            body.appendChild(use/*.cloneNode(true)*/);
+        else
+            console.error('duplicate prouse element', use);        
         
         
     }
