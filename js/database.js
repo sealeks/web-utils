@@ -259,7 +259,9 @@ dbutil.database.date = function(date){
     var d = date.getDate();
     var m = date.getMonth()+1;
     var y = date.getFullYear();
-    return '' + y +'-'+ (m<=9?'0'+m:m) +'-'+ (d<=9?'0'+d:d) + '  ' + date.toLocaleTimeString();
+    var hnul= (date.getHours() <10) ? '0' : '';
+    return '' + y +'-'+ (m<=9?'0'+m:m) +'-'+
+        (d<=9?'0'+d:d) + '  ' + hnul + date.toLocaleTimeString();
 }
 
 
